@@ -48,6 +48,18 @@ if (isset($_POST['simpan_ket'])) {
 <!-- Tabel -->
 <div class="row">
 	<div class="col-sm-12">
+		<div class="card">
+			<div class="card-header">Lokasi anda saat ini</div>
+			<div class="card-body">
+						<div id="map" style="height: 400px;">
+						</div>
+			</div>
+		</div>
+		<div class="card bg-warning location-warning d-none">
+			<div class="card-body">
+						<span class="text-dark">Anda berada diluar radius absensi. Pastikan anda berada didalam radius dan muat ulang halaman ini untuk melakukan absensi</span>
+			</div>
+		</div>
 		<div class="table-responsive">
 			<table class="table-responsive table-borderless table-earning" border="10">
 				<form action="" method="POST">
@@ -75,7 +87,7 @@ if (isset($_POST['simpan_ket'])) {
           </tr>
 
 					<tr>
-						<td><button type="submit" name="simpan" class="btn btn-success" onclick="return confirm('ingin absen?')">Absen</button></td>
+						<td><button type="submit" name="simpan" class="btn btn-success" id="btnAbsen" onclick="return confirm('ingin absen?')">Absen</button></td>
 
 					</tr>
 
