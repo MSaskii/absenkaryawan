@@ -38,7 +38,92 @@
 
     <!-- Main JS-->
     <script src="<?=url()?>js/main.js"></script>
+
+    <!-- JS untuk absensi -->
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,places&ext=.js"></script>
+    <script src="https://rawgit.com/HPNeo/gmaps/master/gmaps.js"></script>
+    <!-- END JS untuk absensi -->
+
     <script>
+
+        //JS untuk absensi
+        var map;
+        var locationStatus = false;
+        
+        var currLat;
+        var currLng;
+
+        var centerLat = 0.4681040092556741;
+        var centerLng = 101.38072267368322;
+
+        var rad = 200; //radius dalam meter
+
+        $(document).ready(function(){
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert('Pastikan perangkat anda memiliki fitur geolocation');
+            }
+
+            function showPosition(position) {
+
+                map = new GMaps({
+                    div: '#map',
+                    lat: centerLat,
+                    lng: centerLng,
+                    zoom: 16
+                });
+                circle = map.drawCircle({
+                    strokeColor: '#BBD8E9',
+                    strokeOpacity: 1,
+                    strokeWeight: 3,
+                    fillColor: '#BBD8E9',
+                    fillOpacity: 0.6,
+                    lat: centerLat,
+                    lng: centerLng,
+                    radius: rad
+                });
+                map.addMarker({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                    title: 'Lima'
+                });
+                currLat = position.coords.latitude;
+                currLng = position.coords.longitude;
+
+            }
+            getDistance(currLat, currLng, centerLat, centerLng);
+        });
+
+        function getDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371;// Radius of the earth in km
+            var dLat = deg2rad(lat2-lat1);  // deg2rad below
+            var dLon = deg2rad(lon2-lon1); 
+            var a = 
+                    Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                    Math.sin(dLon/2) * Math.sin(dLon/2)
+                ; 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            var d = R * c; // Distance in km
+            var m = d * 1000;
+            if( m < rad ){
+                locationStatus = true;
+                $('#btnAbsen').prop('disabled', false);
+                $('.location-warning').addClass('d-none');
+            }else{
+                locationStatus = false;
+                $('#btnAbsen').prop('disabled', true);
+                $('.location-warning').removeClass('d-none');
+            }
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI/180)
+        }
+
+        //END JS untuk absensi
+    
         function showTime(){
     var date = new Date();
     var h = date.getHours(); // 0 - 23
